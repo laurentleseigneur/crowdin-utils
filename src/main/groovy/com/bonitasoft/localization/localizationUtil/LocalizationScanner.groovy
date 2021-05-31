@@ -64,17 +64,9 @@ public class LocalizationScanner {
 //                def localeJson = new File("${basePath}/localization/local_${language}.json")
 //                localeJson.text = JsonOutput.prettyPrint(JsonOutput.toJson(filteredProperties))
 //            }
-            def keys = allKeys
-
-            def fileName = "localization.json"
-            writePropertiesToFile(fileName, keys)
-
-            def usage = keyUsage
-            def s = "keyUsage.json"
-            writePropertiesToFile(s,usage)
-//            def keyUsageFile = new File("${basePath}/localization/${s}")
-//            keyUsageFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(usage))
         }
+        writePropertiesToFile("localization.json", allKeys)
+        writePropertiesToFile("keyUsage.json", keyUsage)
     }
 
     private void writePropertiesToFile(String fileName, TreeMap keys) {
