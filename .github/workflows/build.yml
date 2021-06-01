@@ -45,4 +45,4 @@ jobs:
       - name: Publish package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./mvnw --batch-mode deploy
+        run: ./mvnw -X -e --batch-mode deploy
