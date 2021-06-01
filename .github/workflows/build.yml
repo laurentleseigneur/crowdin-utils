@@ -49,6 +49,6 @@ jobs:
           distribution: 'adopt'
 
       - name: Publish package
-        run: ./mvnw -X -e --batch-mode deploy
+        run: ./mvnw -X -e -s settings.xml --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
