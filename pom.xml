@@ -8,8 +8,8 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bonitasoft.localization</groupId>
-    <artifactId>localizationUtil</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <artifactId>crowdin-utils</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
     <name>localizationUtil</name>
     <description>localizationUtil</description>
     <properties>
