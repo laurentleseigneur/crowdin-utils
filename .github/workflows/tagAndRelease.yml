@@ -112,7 +112,7 @@ jobs:
           asset_content_type: application/zip
 
       - name: Publish package
-          run: mvn --batch-mode deploy
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./mvnw --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
