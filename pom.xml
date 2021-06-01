@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.bonitasoft.localization</groupId>
     <artifactId>localizationUtil</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>localizationUtil</name>
     <description>localizationUtil</description>
     <properties>
@@ -79,7 +79,7 @@
         <url>https://github.com/laurentleseigneur/localizationUtil</url>
         <connection>scm:git:${project.scm.url}.git</connection>
         <developerConnection>scm:git:${project.scm.url}.git</developerConnection>
-        <tag>localizationUtil-0.0.2</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <repository>
