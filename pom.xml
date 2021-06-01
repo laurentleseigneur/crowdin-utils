@@ -81,4 +81,11 @@
 		<developerConnection>scm:git:${project.scm.url}.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/laurentleseigneur/localizationUtil</url>
+		</repository>
+	</distributionManagement>
 </project>

@@ -111,3 +111,8 @@ jobs:
           asset_name: ${{ steps.get-version.outputs.final-name }}.jar
           asset_content_type: application/zip
 
+      - name: Publish package
+          run: mvn --batch-mode deploy
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

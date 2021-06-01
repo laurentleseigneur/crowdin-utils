@@ -39,3 +39,8 @@ jobs:
         with:
           name: "${{ steps.get-version.outputs.final-name }}.jar"
           path: "target/${{ steps.get-version.outputs.final-name }}.jar"
+
+      - name: Publish package
+          run: mvn --batch-mode deploy
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
