@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.bonitasoft.localization</groupId>
     <artifactId>crowdin-utils</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5-SNAPSHOT</version>
     <name>localizationUtil</name>
     <description>localizationUtil</description>
     <properties>
@@ -88,7 +88,7 @@
         <url>https://github.com/laurentleseigneur/crowdin-utils</url>
         <connection>scm:git:${project.scm.url}.git</connection>
         <developerConnection>scm:git:${project.scm.url}.git</developerConnection>
-        <tag>crowdin-utils-0.0.4</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <repository>
