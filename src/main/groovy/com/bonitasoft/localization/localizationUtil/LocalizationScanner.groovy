@@ -20,7 +20,7 @@ public class LocalizationScanner {
 
     JsonSlurper jsonSlurper = new JsonSlurper()
 
-    def importCrowdinKeys() {
+    def importTranslationKeys() {
        def all=[:]
         getSupportedLanguages().each { language ->
             println("get ${language} translations")
@@ -31,9 +31,9 @@ public class LocalizationScanner {
             localeProps.each { k, v ->
                 props.put(k, v)
             }
-            def crowdinFile = new File("${basePath}/localization/localization_${language}_crowdin.json")
-            def crowdinProps = readJsonPropertyFile(crowdinFile)
-            crowdinProps.each { k, v ->
+            def translationFile = new File("${basePath}/localization/localization_${language}.json")
+            def translationProperties = readJsonPropertyFile(translationFile)
+            translationProperties.each { k, v ->
                 props.putIfAbsent(k, v)
             }
 
@@ -45,7 +45,7 @@ public class LocalizationScanner {
         }
     }
 
-    def exportCrowdinKeys() {
+    def exportTranslationKeys() {
         def allProps = [:]
         def localeProps = [:]
         TreeMap keyUsage = new TreeMap()

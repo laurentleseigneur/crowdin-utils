@@ -8,7 +8,7 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bonitasoft.localization</groupId>
-    <artifactId>crowdin-utils</artifactId>
+    <artifactId>localization-utils</artifactId>
     <version>0.0.5-SNAPSHOT</version>
     <name>localizationUtil</name>
     <description>localizationUtil</description>
@@ -85,7 +85,7 @@
         </plugins>
     </build>
     <scm>
-        <url>https://github.com/laurentleseigneur/crowdin-utils</url>
+        <url>https://github.com/laurentleseigneur/localization-utils</url>
         <connection>scm:git:${project.scm.url}.git</connection>
         <developerConnection>scm:git:${project.scm.url}.git</developerConnection>
         <tag>HEAD</tag>
@@ -94,7 +94,7 @@
         <repository>
             <id>github</id>
             <name>github package</name>
-            <url>https://maven.pkg.github.com/laurentleseigneur/crowdin-utils</url>
+            <url>https://maven.pkg.github.com/laurentleseigneur/localization-utils</url>
         </repository>
     </distributionManagement>
 </project>
