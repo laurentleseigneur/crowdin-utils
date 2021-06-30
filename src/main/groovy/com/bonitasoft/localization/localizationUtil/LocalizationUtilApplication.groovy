@@ -26,10 +26,10 @@ class LocalizationUtilApplication {
                 def action = args[1]
                 switch (action) {
                     case 'exportKeys':
-                        localizationScanner.exportCrowdinKeys()
+                        localizationScanner.exportTranslationKeys()
                         break
                     case 'importKeys':
-                        localizationScanner.importCrowdinKeys()
+                        localizationScanner.importTranslationKeys()
                         break
                     default:
                         println('usage: java -jar localizationUtil-<VERSION>.jar <FOLDER> [exportKeys|importKeys]')
