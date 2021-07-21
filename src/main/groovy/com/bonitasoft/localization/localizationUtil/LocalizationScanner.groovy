@@ -88,7 +88,7 @@ public class LocalizationScanner {
             writeToPropertyFile("${basePath}/locales/${localShort}/localization.properties", properties)
         }
 
-        writeToPropertyFile("${basePath}/templates/en/localization.properties", allKeys)
+        writeToPropertyFile("${basePath}/templates/localization.properties", allKeys)
         writeToJsonFile("${basePath}/localization/localization.json", allKeys)
         writeToJsonFile("${basePath}/localization/keyUsage.json", keyUsage)
     }
