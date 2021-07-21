@@ -21,7 +21,7 @@ public class LocalizationScanner {
     JsonSlurper jsonSlurper = new JsonSlurper()
 
     def importTranslationKeys() {
-       def all=[:]
+        def all = [:]
         getSupportedLanguages().each { language ->
             println("get ${language} translations")
             TreeMap props = new TreeMap()
@@ -37,11 +37,11 @@ public class LocalizationScanner {
                 props.putIfAbsent(k, v)
             }
 
-            all.put(language,props)
+            all.put(language, props)
         }
         List<Object> localizationFiles = getLocalizationFiles()
         localizationFiles.each {
-            writePropertiesToFile(it,all)
+            writeToJsonFile(it, all)
         }
     }
 
@@ -80,18 +80,38 @@ public class LocalizationScanner {
             }
         }
         localeProps.each { language, properties ->
-            writePropertiesToFile("${basePath}/localization/locale_${language}.json", properties)
+            writeToJsonFile("${basePath}/localization/locale_${language}.json", properties)
         }
-        writePropertiesToFile("${basePath}/localization/localization.json", allKeys)
-        writePropertiesToFile("${basePath}/localization/keyUsage.json", keyUsage)
+
+        allProps.each { language, properties ->
+            def localShort = getLocaleShort(language)
+            writeToPropertyFile("${basePath}/locales/${localShort}/localization.properties", properties)
+        }
+
+        writeToPropertyFile("${basePath}/templates/en/localization.properties", allKeys)
+        writeToJsonFile("${basePath}/localization/localization.json", allKeys)
+        writeToJsonFile("${basePath}/localization/keyUsage.json", keyUsage)
     }
 
-    private void writePropertiesToFile(def filePath, def keys) {
+    private void writeToJsonFile(def filePath, def keys) {
+        createParentDirectory(filePath as String)
         def keysJson = new File(filePath as String)
         keysJson.text = JsonOutput.prettyPrint(JsonOutput.toJson(keys))
-        println("writing file ${filePath}")
+        println("writing file ${keysJson.absolutePath}")
     }
 
+    private void writeToPropertyFile(def filePath, def properties) {
+        def fileName = filePath as String
+        createParentDirectory(fileName)
+
+        def propertyFile = new File(fileName)
+        def fileWriter = new OutputStreamWriter(new FileOutputStream(fileName, false), 'UTF-8')
+        Properties props = properties as Properties
+        props.store(fileWriter, null)
+        fileWriter.close()
+        println("writing file ${propertyFile.getAbsolutePath()}")
+
+    }
 
     private List<File> getLocalizationFiles() {
         def list = []
@@ -139,5 +159,15 @@ public class LocalizationScanner {
 
     boolean isValidProperty(String property) {
         !property.startsWith('$')
+    }
+
+
+    void createParentDirectory(String fileName) {
+        new File(fileName).parentFile.mkdirs()
+    }
+
+    def getLocaleShort(def locale) {
+        def localesShort = ['fr-FR': 'fr', 'es-ES': 'es']
+        localesShort[locale]
     }
 }
