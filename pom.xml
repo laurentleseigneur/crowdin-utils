@@ -5,7 +5,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.5.0</version>
-        <relativePath /> <!-- lookup parent from repository -->
+        <relativePath />
     </parent>
     <groupId>com.bonitasoft.localization</groupId>
     <artifactId>localization-utils</artifactId>
@@ -32,7 +32,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>2.5.0</version>
+            <version>2.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -71,7 +76,7 @@
         <dependency> <!-- enables mocking of classes (in addition to interfaces) -->
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.11.0</version>
+            <version>1.12.6</version>
             <scope>test</scope>
         </dependency>
         <dependency> <!-- enables mocking of classes without default constructor (together with ByteBuddy or CGLIB) -->

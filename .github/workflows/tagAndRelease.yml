@@ -11,11 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Java and Maven
-        uses: actions/setup-java@v1.4.3
+      - name: Install Java and Maven - setup settings.xml
+        uses: actions/setup-java@v2
         with:
-          java-version: 8
+          java-version: 11
+          distribution: 'temurin'
           server-id: github
+          cache: 'maven'
 
       - name: Configure Git user
         run: |
@@ -42,11 +44,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Java and Maven
-        uses: actions/setup-java@v1.4.3
+      - name: Install Java and Maven - setup settings.xml
+        uses: actions/setup-java@v2
         with:
-          java-version: 8
+          java-version: 11
+          distribution: 'temurin'
           server-id: github
+          cache: 'maven'
 
       - name: Configure Git user
         run: |
@@ -110,12 +114,6 @@ jobs:
           asset_path: target/${{ steps.get-version.outputs.final-name }}.jar
           asset_name: ${{ steps.get-version.outputs.final-name }}.jar
           asset_content_type: application/zip
-
-      - name: Set up Java for publishing to GitHub Packages
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
 
       - name: Publish package
         run: ./mvnw --batch-mode deploy
