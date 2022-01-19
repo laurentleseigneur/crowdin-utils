@@ -7,23 +7,27 @@ import lombok.Builder
 import lombok.Data
 import lombok.NonNull
 import lombok.RequiredArgsConstructor
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
 @Data
 @RequiredArgsConstructor
 @Builder
-public class LocalizationScanner {
+class LocalizationScanner {
 
     @NonNull
     String basePath
 
     JsonSlurper jsonSlurper = new JsonSlurper()
 
+    Logger logger = LoggerFactory.getLogger(LocalizationScanner.class)
+
     def importTranslationKeys() {
         def all = [:]
         getSupportedLanguages().each { language ->
-            println("get ${language} translations")
+            logger.info("get {} translations", language)
             TreeMap props = new TreeMap()
             def localeFilePath = "${basePath}/localization/locale_${language}.json"
             def localFile = new File(localeFilePath)
@@ -39,9 +43,9 @@ public class LocalizationScanner {
 
             all.put(language, props)
         }
-        List<Object> localizationFiles = getLocalizationFiles()
+        def localizationFiles = getLocalizationFiles()
         localizationFiles.each {
-            writeToJsonFile(it, all)
+            updateLocalizationFile(it, all)
         }
     }
 
@@ -80,40 +84,24 @@ public class LocalizationScanner {
             }
         }
         localeProps.each { language, properties ->
-            writeToJsonFile("${basePath}/localization/locale_${language}.json", properties)
+            writeToJsonFile(new File("${basePath}/localization/locale_${language}.json"), properties)
         }
-
-        allProps.each { language, properties ->
-            def localShort = getLocaleShort(language)
-            writeToPropertyFile("${basePath}/locales/${localShort}/localization.properties", properties)
-        }
-
-        writeToPropertyFile("${basePath}/templates/localization.properties", allKeys)
-        writeToJsonFile("${basePath}/localization/localization.json", allKeys)
-        writeToJsonFile("${basePath}/localization/keyUsage.json", keyUsage)
+        writeToJsonFile(new File("${basePath}/localization/localization.json"), allKeys)
+        writeToJsonFile(new File("${basePath}/localization/keyUsage.json"), keyUsage)
     }
 
-    private void writeToJsonFile(def filePath, def keys) {
-        createParentDirectory(filePath as String)
-        def keysJson = new File(filePath as String)
+    private void writeToJsonFile(File destinationFile, def keys) {
+        createParentDirectory(destinationFile as String)
+        def keysJson = new File(destinationFile as String)
+        def fileProps = readJsonPropertyFile(destinationFile)
+        fileProps.each { k, v ->
+            logger.debug("found key.value {} - {} ", k, v)
+        }
         keysJson.text = JsonOutput.prettyPrint(JsonOutput.toJson(keys))
-        println("writing file ${keysJson.absolutePath}")
+        logger.info("writing file {}", keysJson.absolutePath)
     }
 
-    private void writeToPropertyFile(def filePath, def properties) {
-        def fileName = filePath as String
-        createParentDirectory(fileName)
-
-        def propertyFile = new File(fileName)
-        def fileWriter = new OutputStreamWriter(new FileOutputStream(fileName, false), 'UTF-8')
-        Properties props = properties as Properties
-        props.store(fileWriter, null)
-        fileWriter.close()
-        println("writing file ${propertyFile.getAbsolutePath()}")
-
-    }
-
-    private List<File> getLocalizationFiles() {
+    def getLocalizationFiles() {
         def list = []
 
         def dir = new File(basePath)
@@ -126,48 +114,78 @@ public class LocalizationScanner {
         filtered
     }
 
-    boolean isLocalizationFile(File file) {
+    static boolean isLocalizationFile(File file) {
         file.getName() == 'localization.json' && isUIDPage(file) && !isBonitaProvidedPage(file)
     }
 
-    boolean isBonitaProvidedPage(File file) {
+    static boolean isBonitaProvidedPage(File file) {
         def pageName = file.parentFile.parentFile.parentFile.getName()
         pageName.startsWith('admin')
     }
 
-    boolean isUIDPage(file) {
+    static boolean isUIDPage(file) {
         def folderName = file.parentFile.parentFile.parentFile.parentFile.getName()
         folderName.equals('web_page')
     }
 
     def readJsonPropertyFile(File file) {
-        println("parsing file ${file.getAbsolutePath()}")
+        if (!file.exists() || !file.canRead()) {
+            logger.error("file {} does not exist", file.getAbsolutePath())
+            return null
+        }
+        logger.info("parsing file {}", file.getAbsolutePath())
         def props = jsonSlurper.parse(file)
         props
     }
 
-    boolean isValidLanguage(String language) {
+    static boolean isValidLanguage(String language) {
         boolean isValid = Locale.getISOLanguages().contains(language.substring(0, 2))
         def supportedLanguages = getSupportedLanguages()
         isValid = isValid && supportedLanguages.contains(language)
         isValid
     }
 
-    private ArrayList<String> getSupportedLanguages() {
+    private static ArrayList<String> getSupportedLanguages() {
         ['fr-FR', 'es-ES']
     }
 
-    boolean isValidProperty(String property) {
+    static boolean isValidProperty(String property) {
         !property.startsWith('$')
     }
 
 
-    void createParentDirectory(String fileName) {
+    static void createParentDirectory(String fileName) {
         new File(fileName).parentFile.mkdirs()
     }
 
-    def getLocaleShort(def locale) {
-        def localesShort = ['fr-FR': 'fr', 'es-ES': 'es']
-        localesShort[locale]
+    def updateLocalizationFile(def destinationFile, def keys) {
+        logger.info("updating localization file {}", destinationFile.absolutePath)
+        def fileProps = readJsonPropertyFile(destinationFile)
+        TreeMap existingKeys = []
+        TreeMap newKeys = []
+        fileProps.each { language, values ->
+            logger.debug("found language [{}] ", language)
+            def languageKeys = values
+            languageKeys.each { key, value ->
+                logger.debug("adding translation key {} ", key)
+                existingKeys.putIfAbsent(key, null)
+            }
+        }
+        keys.each { language, values ->
+            def languageKeys = [:]
+            values.each { key, value ->
+                if (existingKeys.containsKey(key)) {
+                    languageKeys.put(key, value)
+                }
+            }
+            newKeys.put(language, languageKeys)
+
+        }
+        logger.debug("found keys in file [{}]: {} ", destinationFile.absolutePath, existingKeys)
+        logger.debug("update keys in file [{}]: {} ", destinationFile.absolutePath, newKeys)
+        destinationFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(newKeys))
+        logger.info("writing file {}", destinationFile.absolutePath)
     }
 }
+
+
