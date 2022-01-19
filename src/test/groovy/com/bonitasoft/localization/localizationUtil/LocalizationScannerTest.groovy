@@ -1,15 +1,18 @@
 package com.bonitasoft.localization.localizationUtil
 
 import groovy.json.JsonSlurper
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.springframework.test.context.junit4.SpringRunner
 import spock.lang.Specification
 
+@RunWith(SpringRunner.class)
 class LocalizationScannerTest extends Specification {
 
-    JsonSlurper jsonSlurper = new JsonSlurper()
-
-
+    @Test
     def "should export keys"() {
         given:
+        JsonSlurper jsonSlurper = new JsonSlurper()
         def basePath = this.getClass().getResource("/").path
         LocalizationScanner localizationScanner = new LocalizationScanner(basePath: basePath)
 
@@ -27,8 +30,10 @@ class LocalizationScannerTest extends Specification {
         jsonContent == expectedContent
     }
 
+    @Test
     def "should import keys"() {
         given:
+        JsonSlurper jsonSlurper = new JsonSlurper()
         def basePath = this.getClass().getResource("/").path
         LocalizationScanner localizationScanner = new LocalizationScanner(basePath: basePath)
 
